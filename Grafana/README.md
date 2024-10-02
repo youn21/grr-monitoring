@@ -11,7 +11,7 @@ Cet onglet propose une série de dashboard prédéfinis. Ils permettent d'avoir 
 
 >[!TIP]  
 >En cliquant sur le bouton **inspect** d'un graphique puis **Show PromQL** vous pouvez voir la requete utilisée. Cela peut etre utile pour créer vos propres requetes !
-:light_bulb:
+:bulb:
 
 ### Metrics
 Cet onglet vous donne plus de liberté et permet d'afficher une graphe d'une métrique simple ou d'une requete plus complexes. 
