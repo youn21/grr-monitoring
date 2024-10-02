@@ -13,7 +13,7 @@ Cet onglet propose une série de dashboard prédéfinis. Ils permettent d'avoir 
 >En cliquant sur le bouton **inspect** d'un graphique puis **Show PromQL** vous pouvez voir la requete utilisée. Cela peut etre utile pour créer vos propres requetes !
 
 
-### Metrics
+### Métriques
 Cet onglet vous donne plus de liberté et permet d'afficher une graphe d'une métrique simple ou d'une requete plus complexes. 
 Vous avez acces à des métriques standards (CPU Usage, Memory Usage, etc.)
 En sélectionnant le champ **Custom query**, vous pouvez interroger n'importe quelle métriques disponibles dans votre projet. 
