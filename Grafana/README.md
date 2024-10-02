@@ -18,7 +18,7 @@ Cet onglet vous donne plus de liberté et permet d'afficher une graphe d'une mé
 Vous avez acces à des métriques standards (CPU Usage, Memory Usage, etc.)
 En sélectionnant le champ **Custom query**, vous pouvez interroger n'importe quelle métriques disponibles dans votre projet. 
 
->[!TIP]
+>:bulb:
 >Le champ **Custom query** fait une auto-complétion des métriques que vous rentrez, vous pouvez par exemple taper "cpu" pour avoir l'ensemble des métriques qui contiennent le mot "cpu". 
 
 
