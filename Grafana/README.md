@@ -9,7 +9,7 @@ En mode *Developer*, rendez vous dans le menu Observe. Plusieurs onglets sont di
 ### Dashboard
 Cet onglet propose une série de dashboard prédéfinis. Ils permettent d'avoir des informations sur les ressources (CPU, mémoire, réseau) consommées par votre projet actuel. 
 
->[!TIP]
+>[!TIP] :light_bulb: 
 >En cliquant sur le bouton **inspect** d'un graphique puis **Show PromQL** vous pouvez voir la requete utilisée. Cela peut etre utile pour créer vos propres requetes !
 
 ### Metrics
