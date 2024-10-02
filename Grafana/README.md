@@ -30,5 +30,66 @@ En sélectionnant le champ **Custom query**, vous pouvez interroger n'importe qu
 
 ### Création des resources avec l'opérateur Grafana
 
-#### CRD datasource
+Pour garder l'esprit GitOps, vous pouvez configurer vos *DataSource* et *Dashboard* grace à des ressources Kubernetes fournies par l'opérateur Grafana. Vous avez à votre disposition deux CRDs (Custom Resource Definition) Kubernetes : GrafanaDatasource et GrafanaDashboard.
+
+#### CRD GrafanaDatasource
+
+```yaml
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDatasource
+metadata:
+  name: prometheus-datasource
+  namespace: grafana
+  labels:
+    app.kubernetes.io/instance: grafana
+spec:
+  datasource:
+    basicAuthUser: '${user}'
+    access: proxy
+    editable: true
+    secureJsonData:
+      basicAuthPassword: '${password}'
+    name: Prometheus
+    url: 'https://thanos-querier.openshift-monitoring.svc.cluster.local:9091'
+    jsonData:
+      timeInterval: 5s
+      tlsSkipVerify: true
+    basicAuth: true
+    isDefault: false
+    type: prometheus
+  instanceSelector:
+    matchLabels:
+      dashboards: grafana
+  resyncPeriod: 5m
+  valuesFrom:
+    - targetPath: basicAuthUser
+      valueFrom:
+        secretKeyRef:
+          key: user
+          name: victoriametrics-credentials
+    - targetPath: secureJsonData.basicAuthPassword
+      valueFrom:
+        secretKeyRef:
+          key: password
+          name: victoriametrics-credentials
+```
 #### CRD dashboard
+
+```yaml
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDashboard
+metadata:
+  name: plmlatex-dashboard
+  namespace: grafana
+  labels:
+    app.kubernetes.io/instance: grafana
+spec:
+  datasources:
+    - datasourceName: plmapps
+      inputName: DS_METRICS.VIRTUALDATA
+  instanceSelector:
+    matchLabels:
+      dashboards: grafana
+  resyncPeriod: 5m
+  url: 'https://plmlab.math.cnrs.fr/monitoring-plm/grafana/-/raw/main/grafana-dashboards/PLMlatex.json'
+```
