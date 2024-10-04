@@ -26,7 +26,12 @@ En sélectionnant le champ **Custom query**, vous pouvez interroger n'importe qu
 
 ### Configuration de la DataSource
 
-### Création/import d'un dashboard
+### Création d'un dashboard
+
+creation de panel et de rows
+
+possibilité d'importer un json 
+
 
 ### Création des resources avec l'opérateur Grafana
 
