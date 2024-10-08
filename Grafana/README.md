@@ -273,4 +273,4 @@ spec:
     [...]
 ```
 
-Vous avez retrouver votre dashboard Grafana ! 
+Vous avez retrouvé votre dashboard Grafana ! 
