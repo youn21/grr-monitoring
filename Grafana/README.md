@@ -2,7 +2,7 @@
 
 [TOC]
 
-## Observer les metrics depuis PLMShift
+## Observer les metrics depuis Openshift
 
 Openshift/OKD propose un menu permettant de consulter les données de monitoring (metrics) et d'en faire des graphiques. 
 En mode *Developer*, rendez vous dans le menu Observe. Plusieurs onglets sont disponibles. Nous allons nous intéresser aux deux premiers : 
@@ -14,25 +14,26 @@ Cet onglet propose une série de dashboard prédéfinis. Ils permettent d'avoir 
 
 
 ### Metrics
-Cet onglet vous donne plus de liberté et permet d'afficher un graphe d'une metric simple ou d'une requête plus complexe. 
+Cet onglet donne plus de liberté et permet d'afficher un graphe d'une metric simple ou d'une requête plus complexe.
 Vous avez accès à des metrics générales (CPU Usage, Memory Usage, etc.)
-En sélectionnant le champ **Custom query**, vous pouvez interroger n'importe quelle metrics disponibles dans votre projet. 
+En sélectionnant le champ **Custom query**, vous pouvez interroger n'importe quelle metrics disponibles dans votre projet.
 
 >:bulb:
->Le champ **Custom query** fait une auto-complétion des metrics que vous rentrez, vous pouvez par exemple taper "cpu" pour avoir l'ensemble des metrics qui contiennent le mot "cpu". 
+>Le champ **Custom query** fait une auto-complétion des metrics que vous rentrez, vous pouvez par exemple taper "cpu" pour avoir l'ensemble des metrics qui contiennent le mot "cpu".
 
-Pour tester, vous pouvez afficher le nombre d'utilisateur de votre site GRR à l'aide de la metric `grr_utilisateurs`. Appuyer sur la touche **Entrer** pour valider.
+Pour tester, vous pouvez afficher le nombre d'utilisateurs de votre site GRR à l'aide de la metric `grr_utilisateurs`. Appuyer sur la touche **Entrer** pour valider.
 
 
 ## Visualisation des metrics depuis Grafana
 
 Grace à l'opérateur Grafana installé sur le cluster Openshift, nous pouvons facilement créer une instance Grafana dans notre projet : 
-- en mode 'Developer', cliquez sur le bouton '+Add' dans le menu à gauche
-- dans le 'Developer Catalog', choisissez 'All services'
-- dans le champ recherche, tapez 'Grafana' et sélectionnez la tuile 'Grafana'
-- cliquez sur 'Create'
-- sélectionnez la vue 'YAML' pour voir la configuration par défaut de l'instance Grafana qui sera créée. Notez le login/password
-- complétez le yaml pour ajouter les infos sur la route et le ServiceAccount comme ci-dessous, en modifiant dans le host 'test-anf' par le nom de votre projet : 
+- en mode *Developer*, cliquez sur le bouton **+Add** dans le menu à gauche
+- dans le *Developer Catalog*, choisissez **All services**
+- dans le champ *recherche*, tapez `Grafana` et sélectionnez la tuile *Grafana*
+- cliquez sur **Create**
+- sélectionnez la vue **YAML** pour voir la configuration par défaut de l'instance Grafana qui sera créée. Notez le login/password
+- complétez le yaml pour ajouter les infos sur la route et le ServiceAccount comme ci-dessous, en modifiant dans le *host* 'test-anf' par le nom de votre projet : 
+
   ```yaml
   apiVersion: grafana.integreatly.org/v1beta1
   kind: Grafana
@@ -66,108 +67,136 @@ Grace à l'opérateur Grafana installé sur le cluster Openshift, nous pouvons f
     serviceAccount:
       automountServiceAccountToken: true
   ```
+
   Le serviceAccount est comme un compte utilisateur interne à votre projet Openshift, il permettra d'interroger le Prometheus depuis Grafana en utilisant.
-- cliquez sur 'Create' pour lancer la création de Grafana
+- cliquez sur **Create** pour lancer la création de Grafana
 
-Au bout de quelques secondes, vous avez accès à votre instance Grafana à l'URL renseignée dans la partie 'host' de la route.
-
-
-
+Au bout de quelques secondes, vous avez accès à votre instance Grafana à l'URL renseignée dans la partie *host* de la route.
 
 
 ### Configuration de la DataSource
 
 Les DataSources permettent d'indiquer à Grafana où lire les metrics. 
-Nous allons configurer comme datasource le Prometheus du cluster.
+Nous allons configurer comme datasource le Prometheus du cluster Openshift.
 
 #### S'authentifier auprès du Prometheus
 
- Pour interroger le Prometheus, il faut être authentifié. Il serait possible d'utiliser votre compte utilisateur mais il est préférable d'utiliser un compte machine (un serviceAccount) dédié à cela. L'installation de Grafana a créé un serviceAccount automatiquement. Vous pouvez le voir en vue 'Developer' :
-- cliquez sur Search
-- dans le menu 'Resources', tapez `ServiceAccount`
-- vous devriez voir apparaître l'ensemble des serviceAccounts de votre projet, dont 'grafana-a-sa'.
+ Pour interroger le Prometheus, il faut être authentifié. Il serait possible d'utiliser votre compte utilisateur mais il est préférable d'utiliser un compte machine (un serviceAccount) dédié à cela. L'installation de Grafana a créé un serviceAccount automatiquement. Vous pouvez le voir en vue *Developer* :
+- cliquez sur **Search**
+- dans le menu *Resources*, tapez `ServiceAccount`
+- vous devriez voir apparaître l'ensemble des serviceAccounts de votre projet, dont *grafana-a-sa*, le serviceAccount créé par l'instance Grafana.
 
-Lors de la création de ce serviceAccount, un token a été généré automatiquement. C'est ce token que nous allons utiliser pour nous authentifier auprès du Prometheus. Si vous regardez le 'yaml' du serviceAccount 'grafana-a-sa', vous pourrez voir qu'il y a un bloc de ligne comme ci-dessous : 
+Lors de la création de ce serviceAccount, un token a été généré automatiquement. C'est ce token que nous allons utiliser pour nous authentifier auprès du Prometheus. Si vous regardez le code YAML du serviceAccount *grafana-a-sa*, vous pourrez voir qu'il y a un bloc de ligne comme ci-dessous : 
 ```yaml
 secrets:
   - name: grafana-a-sa-dockercfg-zc7n2
 ```
-Ce bloc indique que le serviceAccount possède un **secret**. Allons voir ce secret en vue 'Developer' :
-- cliquez sur Search
-- dans le menu 'Resources', tapez `Secret`
-- vous devriez voir le secret en question, par exemple 'grafana-a-sa-token-7xw4s'
+Ce bloc indique que le serviceAccount possède un *secret*. Allons voir ce secret en vue *Developer* :
+- cliquez sur **Search**
+- dans le menu *Resources*, tapez `Secret`
+- vous devriez voir le secret en question, par exemple *grafana-a-sa-token-7xw4s*
 
-Ce secret possède une clé **token** qui a pour valeur le token de notre **serviceAccount**. C'est ce token que nous allons utiliser pour l'authentification.
+Ce secret possède une clé *token* qui a pour valeur le token de notre serviceAccount. C'est ce token que nous allons utiliser pour l'authentification.
 
 #### Donner les droits au serviceAccount
 
-Nous allons donner les droits d'interroger Prometheus au serviceAccount, pour cela en mode 'Developer' : 
+##### avec l'interface web
+
+Nous allons donner les droits d'interroger Prometheus au serviceAccount, pour cela en mode *Developer* : 
 - allez dans le menu **Project**
 - allez dans l'onglet **Project access**
-- ajoutez un access en cliquant sur 'Add access' et renseigner les informations : 
-  - type: ServiceAccount
+- ajoutez un access en cliquant sur **Add access** et renseigner les informations : 
+  - type: `ServiceAccount`
   - name: le nom de votre serviceAccount qui doit être `grafana-a-sa`
-  - role: view
+  - role: `view`
   - project: votre projet 
 - cliquez sur **Save**
 
-#### Creation de la datasource 
+##### à l'aide d'une ressource Kubernetes *RoleBinding*
 
+Il est possible de donner ces droits à l'aide d'une ressource Kubernetes *RoleBinding* comme ci-dessous :  
+```yaml
+  kind: RoleBinding
+  apiVersion: rbac.authorization.k8s.io/v1
+  metadata:
+    name: grafana-a-sa-view
+    namespace: test-anf
+  subjects:
+    - kind: ServiceAccount
+      name: grafana-a-sa
+      namespace: test-anf
+  roleRef:
+    apiGroup: rbac.authorization.k8s.io
+    kind: ClusterRole
+    name: view
+```
+
+#### Création de la datasource 
+
+Nous pouvons maintenant créer la datasource sur Grafana.
 Depuis l'interface web de votre instance grafana, allez dans le menu **Connections** puis **Data sources** : 
-- cliquez sur 'Add data sources'
-- sélectionnez le type 'Prometheus' puis renseignez les valeurs ci-dessous :
-  - Dans la partie **Connection**
+- cliquez sur **Add data sources**
+- sélectionnez le type **Prometheus* puis renseignez les valeurs ci-dessous :
+  - Dans la partie *Connection*
     - Prometheus server URL : `https://thanos-querier.openshift-monitoring.svc.cluster.local:9092`
-  - Dans la partie **Authentication**
-    - Authentication methods: `No Authentication`
-  - dans la partie **TLS settings**
-    - cochez la case 'Skip TLS certificate validation'
-  - Dans la partie **HTTP headers**, ajouter un entête HTTP : 
+  - Dans la partie *Authentication*
+    - Authentication methods: **No Authentication**
+  - dans la partie *TLS settings*
+    - cochez la case **Skip TLS certificate validation**
+  - Dans la partie *HTTP headers*, ajouter un entête HTTP : 
     - Header: `Authorization`
     - Value: `Bearer <token serviceAccount>` en replacement `<token serviceAccount>` par le token du serviceAccount récupéré précédemment 
-  - Dans la partie **Other**
+  - Dans la partie *Other*
     - Custom query parameters: `namespace=test-anf` (remplacez test-anf par le nom de votre projet)
-    - HTTP method: GET
+    - HTTP method: **GET**
   
 Cliquez sur **Save & test**. Votre instance Grafana est maintenant configurée pour interroger le Prometheus.
 
 ### Création d'un dashboard
 
 Nous pouvons maintenant commencer à créer notre premier dashboard. 
-Dans le menu de Grafana, cliquez sur 'Dashboard', puis 'Create Dashboard'. 
+Dans le menu de Grafana, cliquez sur **Dashboard**, puis **Create Dashboard**. 
 Vous avez ici plusieurs choix : 
- - **Add visualization** : vous permet de créer votre dashboard entierement à la main
+ - **Add visualization** : vous permet de créer votre dashboard entièrement à la main
  - **Add a library panel** : permet d'inclure des graphiques qui proviennent d'autres dashboard
  - **Import a dashboard** : permet d'importer un dashboard (au format JSON). De nombreux dashboards sont disponibles en téléchargement, par exemple sur le site https://grafana.com/grafana/dashboards/
 
-Cliquez sur **Add visualization** pour créer votre dashboard. Après avoir sélectionné votre Datasource, vous arrivez sur la page vous permettant de créer votre premier graphique.
+Cliquez sur **Add visualization** pour créer votre dashboard. Après avoir sélectionné votre Datasource, vous arrivez sur la page vous permettant de créer votre premier graphique, appelé *Panel* dans Grafana.
 
 - le cadre de droite permet de configurer le graphique. Vous pouvez choisir le type de graphe que vous voulez (time series, bar chart, etc.), donner un titre, etc.
-- le cadre en bas vous permet de créer votre requête de metrics. 
-- le cadre juste au dessus est le résultat.
+- le cadre en bas vous permet de créer votre requête pour interroger des metrics. 
+- le cadre juste au dessus est le résultat de votre requête.
 Vous pouvez voir ci-dessous un exemple : 
 ![Vue Grafana](grafana1.png "Panel Grafana")
 
-Cliquez sur *Apply* pour créer le graphique. 
+Cliquez sur **Apply** pour créer le panel. 
 Vous pouvez maintenant ajouter n'importe quel graphique que vous souhaitez afficher sur votre dashboard. 
 
 ### Sauvegarder le dashboard
 
-Lorsque vous avez fini de créer le dashboard, il faut penser à le sauvegarder. Vous pouvez cliquer sur le bouton "Save dashboard" de Grafana mais cela ne suffira pas. Le pod Grafana qui a été créé ne possède pas de volume persistent et donc ne stocke rien de façon perenne. Un redémarrage du pod entraînera une perte des modifications que vous avez réalisées pour ajouter votre datasource et créer votre dashboard. Il serait possible d'ajouter un volume persistant à notre Grafana pour conserver les modifications, mais il y a mieux !
+Lorsque vous avez fini de créer le dashboard, il faut penser à le sauvegarder. Vous pouvez cliquer sur le bouton **Save dashboard** (la disquette) de Grafana mais cela ne suffira pas. Le pod Grafana qui a été créé ne possède pas de volume persistent et ne stocke rien de façon pérenne. Un redémarrage du pod entraînera une perte des modifications que vous avez réalisées pour ajouter votre datasource et créer votre dashboard. Il serait possible d'ajouter un volume persistant à notre Grafana pour conserver les modifications, mais il y a mieux !
 
-### Création des resources avec l'opérateur Grafana
+Pour la suite du TP, nous allons exporter le dashboard au format JSON :  
+- sur grafana, lorsque vous êtes sur votre dashboard, cliquez sur le bouton **Share** en haut à droite.
+- allez dans l'onglet **Export**
+- activer l'option *Export for sharing externally*. Cela permettra de rendre agnostique la datasource.
+- cliquez sur **View JSON** ou **Save to file** pour enregistrer le JSON
 
-Pour garder l'esprit GitOps, vous pouvez configurer vos *DataSource* et *Dashboard* grâce à des ressources Kubernetes fournies par l'opérateur Grafana. Vous avez à votre disposition deux CRDs (Custom Resource Definition) Kubernetes : GrafanaDashboard et GrafanaDatasource. 
+Vous pouvez maintenant supprimer votre pod grafana. Il va se recréer automatiquement et vous pouvez voir que vous avez tout perdu ! 
 
+### Création des ressources avec l'opérateur Grafana
+
+Pour garder l'esprit GitOps, vous pouvez configurer vos *DataSource* et *Dashboard* grâce à des ressources Kubernetes fournies par l'opérateur Grafana. l’intérêt est de pouvoir mettre la définition de ces ressources (fichiers YAML) dans un dépôt git ! 
+Vous avez à votre disposition deux CRDs (Custom Resource Definition) Kubernetes : GrafanaDashboard et GrafanaDatasource. 
 
 #### CRD GrafanaDatasource
 
-Ce type de resource Kubernetes permet de créer un datasource pour Grafana. Pour créer cette ressource :
-- en mode 'Developer', cliquez sur le bouton '+Add' dans le menu à gauche
-- dans le 'Developer Catalog', choisissez 'All services'
-- dans le champ recherche, tapez 'datasource' et sélectionnez la tuile 'GrafanaDatasource'
-- cliquez sur 'Create'
-- sélectionnez la vue 'YAML' pour voir la configuration par défaut puis complétez le yaml comme ci-dessous.
+Le type de ressource Kubernetes *GrafanaDatasource* permet de créer un datasource pour Grafana. Pour créer cette ressource :
+- en mode *Developer*, cliquez sur le bouton **+Add** dans le menu à gauche
+- dans le *Developer Catalog*, choisissez **All services**
+- dans le champ *recherche*, tapez `datasource` et sélectionnez la tuile **GrafanaDatasource**
+- cliquez sur **Create**
+- sélectionnez la vue **YAML* pour voir la configuration par défaut puis complétez le YAML comme ci-dessous.
 
 ```yaml
 kind: GrafanaDatasource
@@ -204,20 +233,14 @@ spec:
           name: grafana-a-sa-token-7xw4s
 ```
 
-
-
 #### CRD dashboard
 
-Ce type de resource Kubernetes permet de créer un dashboard. 
-Commencez par récupérer votre dashboard au format JSON : 
-- sur grafana, lorsque vous êtes sur votre dashboard, cliquez sur le bouton "dashboard settings" (la roue dentée) en haut à droite.
-- allez dans l'onglet *JSON Model*
-
-Vous pouvez maintenant créer votre ressource Kubernetes GrafanaDashboard :
-- en mode 'Developer', cliquez sur le bouton '+Add' dans le menu à gauche
-- dans le 'Developer Catalog', choisissez 'All services'
-- dans le champ recherche, tapez 'dashboard' et sélectionnez la tuile 'GrafanaDashboard'
-- cliquez sur 'Create'
+Vous pouvez maintenant créer votre ressource Kubernetes *GrafanaDashboard* :
+- en mode *Developer*, cliquez sur le bouton **+Ad** dans le menu à gauche
+- dans le *Developer Catalog*, choisissez **All services**
+- dans le champ *recherche*, tapez `dashboard` et sélectionnez la tuile **GrafanaDashboard**
+- cliquez sur **Create**
+- complétez les informations comme ci-dessous et copier le contenu du JSON de votre dashboard en tant que valeur de la clé *json* (attention à l'indentation !).
 
 
 ```yaml
@@ -249,3 +272,5 @@ spec:
         }
     [...]
 ```
+
+Vous avez retrouver votre dashboard Grafana ! 
