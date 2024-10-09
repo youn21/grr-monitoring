@@ -15,7 +15,7 @@ my-new-deployment-mariadb-0            1/1     Running   0          31h
 ```
 
 ```
-[salleman@syl:~]$ oc logs my-new-deployment-grr-cf8bfd67-7kxcr
+[salleman@syl:~]$ oc logs my-new-deployment-mariadb-0  
 ```
 
 ## Consulter les logs depuis l'interface
@@ -28,10 +28,12 @@ Connectez vous à https://anf2024.math.cnrs.fr puis, en mode *Administrator* :
 
 Vous voyez les logs du pods actuel.
 
-Le menu ci-dessous vous permet plusieurs actions, de gauche à droite : 
-- selection du container (un pod peut avoir plusieurs containers. Ce menu permet de sélectionner les logs du container qu'on souhaite observer)
+![Vue des logs](logs1.png "Vue des logs")
+
+Le menu au dessus de la fenêtre des logs propose plusieurs actions, de gauche à droite : 
+- sélection du container (un pod peut avoir plusieurs containers. Ce menu permet de sélectionner les logs du container qu'on souhaite observer)
 - si un container/pod redémarre, vous pouvez voir les logs du précédent container/pod en sélectionnant **Previous logs** 
-![Menu logs](logs1.png "Menu Logs")
+
 
 
 ### Aggregated logs
