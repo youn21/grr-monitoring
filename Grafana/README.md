@@ -81,7 +81,8 @@ Nous allons configurer comme datasource le Prometheus du cluster Openshift.
 
 #### S'authentifier auprès du Prometheus
 
- Pour interroger le Prometheus, il faut être authentifié. Il serait possible d'utiliser votre compte utilisateur mais il est préférable d'utiliser un compte machine (un serviceAccount) dédié à cela. L'installation de Grafana a créé un serviceAccount automatiquement. Vous pouvez le voir en vue *Developer* :
+Pour interroger le Prometheus, il faut être authentifié. Il serait possible d'utiliser votre compte utilisateur mais il est préférable d'utiliser un compte machine (un serviceAccount) dédié à cela. L'installation de Grafana a créé un serviceAccount automatiquement. Vous pouvez le voir en vue *Administrator* :
+- cliquer sur **Home**
 - cliquez sur **Search**
 - dans le menu *Resources*, tapez `ServiceAccount`
 - vous devriez voir apparaître l'ensemble des serviceAccounts de votre projet, dont *grafana-a-sa*, le serviceAccount créé par l'instance Grafana.
@@ -91,30 +92,34 @@ Lors de la création de ce serviceAccount, un token a été généré automatiqu
 secrets:
   - name: grafana-a-sa-dockercfg-zc7n2
 ```
-Ce bloc indique que le serviceAccount possède un *secret*. Allons voir ce secret en vue *Developer* :
-- cliquez sur **Search**
-- dans le menu *Resources*, tapez `Secret`
+Ce bloc indique que le serviceAccount possède un *secret*. Allons voir ce secret en vue *Administrator* :
+- cliquez sur **Workloads**
+- cliquez sur **Secrets**
 - vous devriez voir le secret en question, par exemple *grafana-a-sa-token-7xw4s*
 
 Ce secret possède une clé *token* qui a pour valeur le token de notre serviceAccount. C'est ce token que nous allons utiliser pour l'authentification.
 
 #### Donner les droits au serviceAccount
 
-##### avec l'interface web
+##### Avec l'interface web
 
-Nous allons donner les droits d'interroger Prometheus au serviceAccount, pour cela en mode *Developer* : 
-- allez dans le menu **Project**
-- allez dans l'onglet **Project access**
-- ajoutez un access en cliquant sur **Add access** et renseigner les informations : 
-  - type: `ServiceAccount`
-  - name: le nom de votre serviceAccount qui doit être `grafana-a-sa`
+Nous allons donner les droits d'interroger Prometheus au serviceAccount, pour cela en mode *Administrator* : 
+- allez dans le menu **User Management**
+- cliquez sur **RoleBindings**
+- cliquez sur le bouton **Create binding**
+- remplissez le formulaire avec les informations suivantes :
+  - name: `grafana-a-sa-view`
+  - namespace: votre projet
   - role: `view`
-  - project: votre projet 
-- cliquez sur **Save**
+  - Subject: `ServiceAccount`
+  - Subject namespace: votre projet
+  - Subject name : le nom de votre serviceAccount qui doit être `grafana-a-sa`
+- cliquez sur **Create**
 
-##### à l'aide d'une ressource Kubernetes *RoleBinding*
+##### A l'aide d'une ressource Kubernetes *RoleBinding*
 
 Il est possible de donner ces droits à l'aide d'une ressource Kubernetes *RoleBinding* comme ci-dessous :  
+
 ```yaml
   kind: RoleBinding
   apiVersion: rbac.authorization.k8s.io/v1
