@@ -38,5 +38,5 @@ Le menu au dessus de la fenêtre des logs propose plusieurs actions, de gauche �
 
 ### Aggregated logs
 
-L'onglet *Aggregated logs* offre une interface plus complete pour parcourir et chercher dans les logs. Vous pouvez par exemple filter par niveau de criticité des logs (critical, warning, info, etc.) et effectuer une recherche sur le contenu d'un log. 
+L'onglet *Aggregated logs* offre une interface plus riche pour parcourir et chercher dans les logs. Vous pouvez par exemple filter par niveau de criticité des logs (critical, warning, info, etc.) et effectuer une recherche sur le contenu d'un log. 
 
