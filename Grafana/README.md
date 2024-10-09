@@ -32,7 +32,7 @@ Grace à l'opérateur Grafana installé sur le cluster Openshift, nous pouvons f
 - dans le champ *recherche*, tapez `Grafana` et sélectionnez la tuile *Grafana*
 - cliquez sur **Create**
 - sélectionnez la vue **YAML** pour voir la configuration par défaut de l'instance Grafana qui sera créée. Notez le login/password
-- complétez le yaml pour ajouter les infos sur la route et le ServiceAccount comme ci-dessous, en modifiant dans le *host* 'test-anf' par le nom de votre projet : 
+- complétez le yaml pour ajouter les infos sur la route (modifier la valeur de la clé *host*, ici 'test-anf', par le nom de votre projet) : 
 
   ```yaml
   apiVersion: grafana.integreatly.org/v1beta1
@@ -64,15 +64,13 @@ Grace à l'opérateur Grafana installé sur le cluster Openshift, nous pouvons f
           name: grafana-a-service
           weight: 100
         wildcardPolicy: None
-    serviceAccount:
-      automountServiceAccountToken: true
   ```
-
-  Le serviceAccount est comme un compte utilisateur interne à votre projet Openshift, il permettra d'interroger le Prometheus depuis Grafana en utilisant.
 - cliquez sur **Create** pour lancer la création de Grafana
 
 Au bout de quelques secondes, vous avez accès à votre instance Grafana à l'URL renseignée dans la partie *host* de la route.
 
+Par défaut, la création d'une instance Grafana va créer une ressource Kubernetes de type *ServiceAccount*.
+Un serviceAccount est comme un compte utilisateur interne à votre projet Openshift, il nous permettra d'interroger le Prometheus depuis Grafana.
 
 ### Configuration de la DataSource
 
