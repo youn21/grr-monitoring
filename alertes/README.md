@@ -1,9 +1,9 @@
 # Gestion des alertes
 
 Avant d'attaquer cette partie, il faut suivi les instructions d'implémentation des dashboards grafana.
-Nous allons nous appuyer sur les outils implémenter dans cette partie pour venir configurer les alertes.
+Nous allons nous appuyer sur les outils implémentés dans cette partie pour venir configurer les alertes.
 
-Une fois en place, nous allons pouvour nous appuyer sur les metrics de `grr` pour mettre en place des alertes selon des seuils que nous allons définir.
+Une fois en place, nous allons pouvoir nous appuyer sur les metrics de `grr` pour mettre en place des alertes selon des seuils que nous allons définir.
 
 ## I - sur interface web OKD
 
@@ -17,7 +17,7 @@ Pour cela, nous pouvons aller consulter le service dédié qui est exposé sur l
 kubectl port-forward svc/grr 9090:9090
 ```
 
-Une fois étudiée, nous allons mettre en place une prometheus rule pour créer une alertes visible depuis l'inerface développeur de l'OKD.
+Une fois étudiées, nous allons mettre en place une prometheus rule pour créer une alerte visible depuis l'interface développeur de l'OKD.
 
 2. Home -> Search -> PrometheusRules -> `Create PrometheusRule`
 
@@ -41,14 +41,14 @@ spec:
           expr: grr_type_area > 3
 ```
 
-Ici, nous faisons des alertes sur le nombre d'utilisateur et le nombre de type areas.
+Ici, nous faisons des alertes sur le nombre d'utilisateurs et le nombre de types areas.
 Vous pouvez voir l'état des alertes dans la vue développeur -> Observe -> Alertes.
 ![alt text](image.png)
 Tout va bien.
-Maintenant créeons un utilisateur:
+Maintenant, créons un utilisateur :
 https://[VOTRE_NAMESPACE].apps.anf.math.cnrs.fr/admin/admin.php?p=admin_user
 
-Et vous verrez l'alertes actives:
+Et vous verrez l'alerte active :
 
 ![alt text](image-4.png)
 
@@ -57,23 +57,24 @@ Et vous verrez l'alertes actives:
 La partie grafana a été installé et configuré depuis le TP metrics.
 Nous allons pouvoir attaquer la partie alerting de grafana.
 
-Cela ce fait en plusieurs étapes:
+Cela se fait en plusieurs étapes :
+
 1. Définition du contact point (canal de distribution)
-2. Définition de la notificaiton policy (relier les alertes aux cannaux de distribution)
+2. Définition de la notification policy (relier les alertes aux cannaux de distribution)
 3. Définition des alertes
 
 ### 1. Définition des contacts points
 
-C'est ce qui définiera vos cannaux de distribution d'alertes.
+C'est ce qui définira vos canaux de distribution d'alertes.
 En gros, comment on va envoyer les alertes.
-Vous en avez des différents:
+Vous en avez des différents :
 
 - email
 - slack | mattermost
 - SMS
 - ...
 
-On va en définir un par défaut et on recevra les alertes par mails:
+On va en définir un par défaut et on recevra les alertes par mails :
 Nommez le `grafana-contact-point-grr.yml`
 
 ```yaml
@@ -102,7 +103,7 @@ spec:
 
 ### 2. Définition notification policies
 
-Les policies vont faire le lien entre les alertes et les contact points.
+Les policies vont faire le lien entre les alertes et les contacts points.
 Nommez le `grafana-notification-policies-grr.yml`
 
 ```yaml
@@ -122,7 +123,7 @@ spec:
     repeat_interval: "1h"
 ```
 
-Remarquer bien la valeur de l'attribu `group_by`, c'est le label qui sera à mettre dans les règles d'alertes afin de déterminer le cannal dans lequel elle sera envoyé.
+Remarquer bien la valeur de l'attribut `group_by`, c'est le label qui sera à mettre dans les règles d'alertes afin de déterminer le canal dans lequel elle sera envoyée.
 
 ### 3. Ecritures des alertes
 
@@ -145,27 +146,27 @@ spec:
 Pour la création des règles, la création du fichier peut-être complexe et très verbeux. 
 Je vous recommande vivement de passer par l'interface graphique de grafana pour configurer vos alertes.
 
-Ainsi, aller au chemin suivant:
+Ainsi, aller au chemin suivant :
 Alerting -> Alert rules.
 
 Et configurer une alerte pour la metric grr_utilisateur pour un seuil > 2.
 
-1. Donner un nom à votre règle:
+1. Donner un nom à votre règle :
 ![alt text](image-6.png)
-2. Définissez le seuil:
+2. Définissez le seuil :
 ![alt text](image-5.png)
-3. Définissez les critères d'évaluation de l'alerte:
+3. Définissez les critères d'évaluation de l'alerte :
 ![alt text](image-7.png)
 Le dossier, étant déjà crée, est juste à sélectionner.
-Pour le groupe d'évaluation, créer en un nouveau: `grafanaalertrulegroup-grr` pour une période de 2 minutes d'intevale.
+Pour le groupe d'évaluation, créer en un nouveau : `grafanaalertrulegroup-grr` pour une période de 2 minutes d'intervalle.
 ![alt text](image-12.png)
 1. Attribuer la bonne notificaiton policy:
 ![alt text](image-8.png)
-1. (optionnel) Donner une description ou un résumé de l'alerte:
+1. (optionnel) Donner une description ou un résumé de l'alerte :
 ![alt text](image-10.png)
 1. save rule and exit
 
-A la fin, vous pouvez extraire la règle que vous venez d'écrire et créer un CRD `grafanaalertrulegroup`:
+À la fin, vous pouvez extraire la règle que vous venez d'écrire et de créer un CRD `grafanaalertrulegroup`:
 Nommez le `grafana-alertes-grr.yml`:
 
 ```yaml
@@ -289,14 +290,14 @@ spec:
 
 Vous aurez alors un état d'alerte `normal`.
 
-Revenez sur votre fichier `GrafanaAlertRuleGroup` et modifier le paramètre de 2 à 1:
+Revenez sur votre fichier `GrafanaAlertRuleGroup` et modifier le paramètre de 2 à 1 :
 Donc de:
 
 ```yaml
 conditions:
   - evaluator:
-      params:
-          - 2
+    params:
+      - 2
 ```
 
 à:
@@ -304,18 +305,20 @@ conditions:
 ```yaml
 conditions:
   - evaluator:
-      params:
-          - 1
+    params:
+      - 1
 ```
 
-L'état va évoluer de la manière suivante:
-A la fin de la période d'évaluation, il va passer en mode pending. Le seuil est dépassé mais pour éviter les fausses alertes, l'état pending indique seulement qu'il y a un changement d'état.
-A la fin de la période de pending, l'état de se mettra en `firing` et vous recevrez une alerte email
+L'état va évoluer de la manière suivante :
 
-### A vous
+- À la fin de la période d'évaluation, il va passer en mode pending.
+- Le seuil est dépassé, mais pour éviter les fausses alertes, l'état pending indique seulement qu'il y a un changement d'état.
+- À la fin de la période de pending, l'état de se mettra en `firing` et vous recevrez une alerte email
+
+### À vous
 
 Essayer de créer une nouvelles alertes en vous appuyant sur une autre metric.
 
-#### Bonus:
+#### Bonus
 
 Afficher les états des alertes dans un dashboard (https://grafana.com/docs/grafana/latest/panels-visualizations/visualizations/alert-list/)
