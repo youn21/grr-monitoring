@@ -1,6 +1,6 @@
 # Gestion des alertes
 
-Avant d'attaquer cette partie, il faut suivi les instructions d'implémentation des dashboards grafana.
+Avant d'attaquer cette partie, il faut suivre les instructions d'implémentation des dashboards grafana.
 Nous allons nous appuyer sur les outils implémentés dans cette partie pour venir configurer les alertes.
 
 Une fois en place, nous allons pouvoir nous appuyer sur les metrics de `grr` pour mettre en place des alertes selon des seuils que nous allons définir.
@@ -28,7 +28,7 @@ apiVersion: monitoring.coreos.com/v1
 kind: PrometheusRule
 metadata:
   name: grr-alertes
-  namespace: anf2024-nicolasperso
+  namespace: [VOTRE_NAMESPACE]
 spec:
   groups:
     - name: grr_users
@@ -60,7 +60,7 @@ Nous allons pouvoir attaquer la partie alerting de grafana.
 Cela se fait en plusieurs étapes :
 
 1. Définition du contact point (canal de distribution)
-2. Définition de la notification policy (relier les alertes aux cannaux de distribution)
+2. Définition de la notification policy (relier les alertes aux canaux de distribution)
 3. Définition des alertes
 
 ### 1. Définition des contacts points
