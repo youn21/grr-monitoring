@@ -2,6 +2,35 @@
 
 [TOC]
 
+## Pré-requis : collecter les metrics de votre projet
+
+Lorsque nous avons une application qui expose des metrics, il nous faut indiquer au Prometheus du cluster Openshift/OKD de venir collecter nos metrics. 
+Pour cela, nous devons créer un *ServiceMonitor*. Celui-ci permet d'ajouter une *Target* à Prometheus qui pointe vers notre *service* qui expose les metrics.
+
+pour créer le *ServiceMonitor*, en mode *Administrator* : 
+- allez dans le menu **Home**
+- cliquez sur **Search**
+- tapez `servicemonitor`
+- cliquez sur le bouton **Create ServiceMonitor**
+- completez le YAML avec les informations comme ci-dessous : 
+  ```yaml
+  apiVersion: monitoring.coreos.com/v1
+  kind: ServiceMonitor
+  metadata:
+    name: grr
+    namespace: test-anf # remplacez par le nom de votre projet
+  spec:
+    endpoints:
+      - interval: 10s
+        path: /metrics
+        port: metrics
+        scheme: http
+    selector:
+      matchLabels:
+        app.kubernetes.io/name: grr
+  ```
+- cliquez sur **Save**
+
 ## Observer les metrics depuis Openshift
 
 Openshift/OKD propose un menu permettant de consulter les données de monitoring (metrics) et d'en faire des graphiques. 
@@ -42,7 +71,7 @@ Grace à l'opérateur Grafana installé sur le cluster Openshift, nous pouvons f
       dashboards: grafana-a
       folders: grafana-a
     name: grafana-a
-    namespace: test-anf
+    namespace: test-anf # remplacé par le nom de votre projet
   spec:
     config:
       auth:
@@ -54,7 +83,7 @@ Grace à l'opérateur Grafana installé sur le cluster Openshift, nous pouvons f
         admin_user: root
     route:
       spec:
-        host: grafana-test-anf.apps.anf.math.cnrs.fr
+        host: grafana-test-anf.apps.anf.math.cnrs.fr # remplacer test-anf par le nom de votre projet
         path: /
         tls:
           insecureEdgeTerminationPolicy: Redirect
@@ -123,11 +152,11 @@ Il est possible de donner ces droits à l'aide d'une ressource Kubernetes *RoleB
   apiVersion: rbac.authorization.k8s.io/v1
   metadata:
     name: grafana-a-sa-view
-    namespace: test-anf
+    namespace: test-anf # remplacer par le nom de votre projet
   subjects:
     - kind: ServiceAccount
       name: grafana-a-sa
-      namespace: test-anf
+      namespace: test-anf # remplacer par le nom de votre projet
   roleRef:
     apiGroup: rbac.authorization.k8s.io
     kind: ClusterRole
@@ -206,13 +235,13 @@ kind: GrafanaDatasource
 apiVersion: grafana.integreatly.org/v1beta1
 metadata:
   name: grafanadatasource-prometheus
-  namespace: test-anf
+  namespace: test-anf # remplacer par le nom de votre projet
 spec:
   datasource:
     access: proxy
     isDefault: true
     jsonData:
-      customQueryParameters: namespace=test-anf
+      customQueryParameters: namespace=test-anf # remplacer par le nom de votre projet
       httpHeaderName1: Authorization
       httpMethod: GET
       timeInterval: 5s
@@ -233,7 +262,7 @@ spec:
       valueFrom:
         secretKeyRef:
           key: token
-          name: grafana-a-sa-token-7xw4s
+          name: grafana-a-sa-token-7xw4s # remplacer par le nom du secret
 ```
 
 #### CRD dashboard
@@ -251,7 +280,7 @@ apiVersion: grafana.integreatly.org/v1beta1
 kind: GrafanaDashboard
 metadata:
   name: grr-dashboard
-  namespace: test-anf
+  namespace: test-anf # remplacer par le nom de votre projet
   labels:
     app.kubernetes.io/instance: grafana
 spec:
