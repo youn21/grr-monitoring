@@ -7,7 +7,7 @@
 Lorsque nous avons une application qui expose des metrics, il nous faut indiquer au Prometheus du cluster Openshift/OKD de venir collecter nos metrics. 
 Pour cela, nous devons créer un *ServiceMonitor*. Celui-ci permet d'ajouter une *Target* à Prometheus qui pointe vers notre *service* qui expose les metrics.
 
-pour créer le *ServiceMonitor*, en mode *Administrator* : 
+Pour créer le *ServiceMonitor*, en mode *Administrator* : 
 - allez dans le menu **Home**
 - cliquez sur **Search**
 - tapez `servicemonitor`
