@@ -203,6 +203,16 @@ Vous pouvez voir ci-dessous un exemple :
 
 Cliquez sur **Apply** pour créer le panel. 
 Vous pouvez maintenant ajouter n'importe quel graphique que vous souhaitez afficher sur votre dashboard. 
+Vous pouvez essayer de creer un graphique pour : 
+- monitorer l'état de santé du service 
+- le nombre de connexion active
+- le nombre de réservation
+
+astuce : vous pouvez regarder les metrics exportés par le service grr en interrogeant l'exporter :
+
+```
+curl localhost:9090/metrics
+```
 
 ### Sauvegarder le dashboard
 
@@ -306,3 +316,4 @@ spec:
 ```
 
 Vous avez retrouvé votre dashboard Grafana ! 
+
