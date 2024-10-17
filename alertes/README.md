@@ -63,6 +63,58 @@ Cela se fait en plusieurs étapes :
 2. Définition de la notification policy (relier les alertes aux canaux de distribution)
 3. Définition des alertes
 
+### 0. Configuration SMTP sur grafana
+
+Il faut mettre à jours la configuration de grafana en définissant le smtp de votre choix:
+
+```yaml
+smtp:
+  enabled: 'true'
+  from_address: grafana@math.cnrs.fr
+  from_name: grafana
+  host: 'super.mathrice-anf.gricad.cloud.math.cnrs.fr:25'
+  skip_verify: 'true'
+```
+
+Vous pouvez changer l'objet de la manière suivante:
+```yaml
+apiVersion: grafana.integreatly.org/v1beta1
+kind: Grafana
+metadata:
+  labels:
+    dashboards: grafana-a
+    folders: grafana-a
+  name: grafana-a
+  namespace: test-anf # remplacé par le nom de votre projet
+spec:
+  config:
+    auth:
+      disable_login_form: 'false'
+    log:
+      mode: console
+    security:
+      admin_password: start
+      admin_user: root
+    smtp:
+      enabled: 'true'
+      from_address: grafana@math.cnrs.fr
+      from_name: grafana
+      host: 'super.mathrice-anf.gricad.cloud.math.cnrs.fr:25'
+      skip_verify: 'true'
+  route:
+    spec:
+      host: grafana-test-anf.apps.anf.math.cnrs.fr # remplacer test-anf par le nom de votre projet
+      path: /
+      tls:
+        insecureEdgeTerminationPolicy: Redirect
+        termination: edge
+      to:
+        kind: Service
+        name: grafana-a-service
+        weight: 100
+      wildcardPolicy: None
+```
+
 ### 1. Définition des contacts points
 
 C'est ce qui définira vos canaux de distribution d'alertes.
@@ -96,7 +148,6 @@ spec:
   name: grafanacontactpoint-default
   settings:
     addresses: "[VOTRE ADDRESS MAIL]"
-    smarthost: "super.mathrice-anf.gricad.cloud.math.cnrs.fr:25"
     from: "grafana@anf2024.math.cnrs.fr"
   type: email
 ```
