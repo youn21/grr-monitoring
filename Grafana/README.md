@@ -114,15 +114,10 @@ Pour interroger le Prometheus, il faut être authentifié. Il serait possible d'
 - dans le menu *Resources*, tapez `ServiceAccount`
 - vous devriez voir apparaître l'ensemble des serviceAccounts de votre projet, dont *grafana-a-sa*, le serviceAccount créé par l'instance Grafana.
 
-Lors de la création de ce serviceAccount, un token a été généré automatiquement. C'est ce token que nous allons utiliser pour nous authentifier auprès du Prometheus. Si vous regardez le code YAML du serviceAccount *grafana-a-sa*, vous pourrez voir qu'il y a un bloc de lignes comme ci-dessous : 
-```yaml
-secrets:
-  - name: grafana-a-sa-dockercfg-zc7n2
-```
-Ce bloc indique que le serviceAccount possède un *secret*. Allons voir ce secret en vue *Administrator* :
+Lors de la création de ce serviceAccount, un token a été généré automatiquement. Pour le retrouver, aller en vue *Administrator* :
 - cliquez sur **Workloads**
 - cliquez sur **Secrets**
-- vous devriez voir le secret en question, par exemple *grafana-a-sa-token-7xw4s*
+- vous devriez voir le secret commençant par "grafana-a-sa-token-", par exemple *grafana-a-sa-token-7xw4s*
 
 Ce secret possède une clé *token* qui a pour valeur le token de notre serviceAccount. C'est ce token que nous allons utiliser pour l'authentification.
 
