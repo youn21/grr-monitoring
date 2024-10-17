@@ -1,0 +1,28 @@
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDatasource
+metadata:
+  name: grafanadatasource-prometheus
+  namespace: test-anf
+spec:
+  datasource:
+    access: proxy
+    isDefault: true
+    jsonData:
+      customQueryParameters: namespace=test-anf
+      httpHeaderName1: Authorization
+      httpMethod: GET
+      timeInterval: 5s
+      tlsSkipVerify: true
+    name: prometheus
+    secureJsonData:
+      httpHeaderValue1: 'Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6Iklta1paOF91X0N1N0lLUElYMlFSUzBSVnZMbXRGWWJfdFI2Tnk4NkdxWHMifQ.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9uYW1lc3BhY2UiOiJ0ZXN0LWFuZiIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VjcmV0Lm5hbWUiOiJncmFmYW5hLWEtc2EtdG9rZW4tbG5tY2wiLCJrdWJlcm5ldGVzLmlvL3NlcnZpY2VhY2NvdW50L3NlcnZpY2UtYWNjb3VudC5uYW1lIjoiZ3JhZmFuYS1hLXNhIiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9zZXJ2aWNlLWFjY291bnQudWlkIjoiN2IyYjYwOTItZmZkZi00ODM0LTg0OGQtNmJlMjI5MDg3OWQ4Iiwic3ViIjoic3lzdGVtOnNlcnZpY2VhY2NvdW50OnRlc3QtYW5mOmdyYWZhbmEtYS1zYSJ9.YqlfEB1GgPWMoeI-BcHGqvZ2AYO4BW6qYp_HnF-SalwvD3kY8JyJCWm6gT2hj872Z9-G0DETOAMfCyjKtwlKs5tbb3zU4FQf9WwBylVvp7z2aQmGHXu6J-SQyAAnoZbQXN9ZUtMSl5fRufAgZQMuFzulOB6LPLGFhSgAgjE68zEeInBQZ9SUFfeUB8c9_Eu8iVROJHmo7yagqPZCW8GP93a7839n1V5S4pBo-xJWEnqytJXMpt495k4suk2zHUy-NFvAophc4nSYNLh8h3fM93_35AqUh_By8bt5vQuFYPeS82enXJGm1igJOIw7sBwV-0naoCA7vXEUrLyoBR6Q935g-a_bmfpacG4TvWxKRFYnuFuoHtF6bHAXrjk-fMPbeHsfAHgXYeMPPHvkjWindPk1FXr3ES63LDav2eJ0Pkot0_vhE2eZ0_L-f32UViK9l8SBneOdFdoF_-WYF4kVcJKKO3Lzgf4ckSPRHvTAFwN58ezLbe7ClrzXPtWyteL0qn_I4javVuAK7U9jxWhn-CCzTw2y1VZ66b27VgnMOd3S9CQFwaLJrJEOI2jOgFUJM0DQPog4vQMq8mftxg2iYyToMhAwr723CeasvHglS0HOak05GhkT66scl9CFvcGum1gLrJWlESFpDCkfnCYN6Y9CZOZtI-Nw2ttvcLOkKzY'
+    type: prometheus
+    url: 'https://thanos-querier.openshift-monitoring.svc.cluster.local:9092'
+  instanceSelector:
+    matchLabels:
+      dashboards: grafana-a
+  plugins:
+    - name: grafana-clock-panel
+      version: 1.3.0
+  resyncPeriod: 5m
+
