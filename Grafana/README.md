@@ -208,11 +208,11 @@ Vous pouvez essayer de creer un graphique pour :
 - le nombre de connexion active
 - le nombre de réservation
 
-astuce : vous pouvez regarder les metrics exportés par le service grr en interrogeant l'exporter :
-
-```
-curl localhost:9090/metrics
-```
+>:bulb:
+>Vous pouvez regarder les metrics exportés par le service grr en interrogeant l'exporter :
+>```
+>curl localhost:9090/metrics
+>```
 
 ### Sauvegarder le dashboard
 
