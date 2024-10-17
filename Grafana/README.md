@@ -294,7 +294,7 @@ spec:
       inputName: DS_PROMETHEUS
   instanceSelector:
     matchLabels:
-      dashboards: grafana
+      dashboards: grafana-a
   resyncPeriod: 5m
   json: |
     {
